@@ -5,16 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
-
-import java.util.Locale;
+import android.widget.ProgressBar;
 
 public class MainActivity extends AppCompatActivity {
 
-    private long mStartTime = 1500000;
+    private long mStartTime = 16000;
 
     private CountDownTimer mCountDownTimer;
 
@@ -23,18 +22,21 @@ public class MainActivity extends AppCompatActivity {
     private Drawable mPauseIcon;
     private Button mResetButton;
 
-    private TextView mTimerText;
+    private ProgressBar mTimerProgressBar;
 
     private boolean mTimerRunning;
 
     private long mTimeRemaining = mStartTime;
+
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTimerText = findViewById(R.id.timer);
+        mTimerProgressBar = findViewById(R.id.timerProgressBar);
+
         mStartPauseButton = findViewById(R.id.start_pause_button);
         mResetButton = findViewById(R.id.reset_button);
 
@@ -44,13 +46,13 @@ public class MainActivity extends AppCompatActivity {
         mStartPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mTimerRunning){
-                    pauseTimer();
-                } else {
-                    startTimer();
-                }
-            }
-        });
+                 if (mTimerRunning) {
+                     pauseTimer();
+                 } else {
+                     startTimer();
+                 }
+             }
+         });
 
         mResetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,18 +63,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startTimer() {
-        mCountDownTimer = new CountDownTimer(mTimeRemaining, 1000) {
+        mCountDownTimer = new CountDownTimer(mTimeRemaining, 2000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 mTimeRemaining = millisUntilFinished;
-                updateTimerText();
+                updateTimerProgressBar();
             }
 
             @Override
             public void onFinish() {
                 mStartPauseButton.setImageDrawable(mStartIcon);
-                updateTimerText();
                 mTimerRunning = false;
+                mResetButton.setVisibility(View.VISIBLE);
             }
         }.start();
         mTimerRunning = true;
@@ -89,13 +91,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void resetTimer(){
         mTimeRemaining = mStartTime;
-        updateTimerText();
+        updateTimerProgressBar();
     }
 
-    private void updateTimerText(){
-        int minutes = (int) mTimeRemaining / 1000 / 60;
-        int seconds = (int) mTimeRemaining / 1000 % 60;
-        String formattedTime = String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds);
-        mTimerText.setText(formattedTime);
+    private void updateTimerProgressBar(){
+        mTimerProgressBar.setProgress(0);
+        mTimerProgressBar.setMax(100);
+        int progress = (int)((mStartTime-mTimeRemaining)/mStartTime*100);
+        mTimerProgressBar.setProgress(progress);
     }
-}
+
+    }
