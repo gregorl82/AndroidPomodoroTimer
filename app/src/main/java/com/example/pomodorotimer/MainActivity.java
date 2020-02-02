@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -13,7 +12,7 @@ import android.widget.ProgressBar;
 
 public class MainActivity extends AppCompatActivity {
 
-    private long mStartTime = 16000;
+    private long mStartTime = 1500000;
 
     private CountDownTimer mCountDownTimer;
 
@@ -27,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean mTimerRunning;
 
     private long mTimeRemaining = mStartTime;
-
-    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,18 +57,25 @@ public class MainActivity extends AppCompatActivity {
                 resetTimer();
             }
         });
+
+        mTimerProgressBar.setVisibility(View.VISIBLE);
+        mTimerProgressBar.setIndeterminate(false);
+        mTimerProgressBar.setMax((int)mStartTime);
+        mTimerProgressBar.setProgress((int)mTimeRemaining);
+
     }
 
     private void startTimer() {
-        mCountDownTimer = new CountDownTimer(mTimeRemaining, 2000) {
+        mCountDownTimer = new CountDownTimer(mTimeRemaining, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 mTimeRemaining = millisUntilFinished;
-                updateTimerProgressBar();
+                mTimerProgressBar.setProgress((int)mTimeRemaining);
             }
 
             @Override
             public void onFinish() {
+                mTimerProgressBar.setProgress(0);
                 mStartPauseButton.setImageDrawable(mStartIcon);
                 mTimerRunning = false;
                 mResetButton.setVisibility(View.VISIBLE);
@@ -91,14 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void resetTimer(){
         mTimeRemaining = mStartTime;
-        updateTimerProgressBar();
+        mTimerProgressBar.setProgress((int)mStartTime);
     }
-
-    private void updateTimerProgressBar(){
-        mTimerProgressBar.setProgress(0);
-        mTimerProgressBar.setMax(100);
-        int progress = (int)((mStartTime-mTimeRemaining)/mStartTime*100);
-        mTimerProgressBar.setProgress(progress);
-    }
-
-    }
+}

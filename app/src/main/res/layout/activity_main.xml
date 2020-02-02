@@ -12,9 +12,10 @@
         android:layout_height="400dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:indeterminate="false"
         android:max="100"
         android:progress="100"
-        android:progressDrawable="@drawable/circle" />
+        android:progressDrawable="@drawable/circle"/>
 
     <ImageButton
         android:id="@+id/start_pause_button"
