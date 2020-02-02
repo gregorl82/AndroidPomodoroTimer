@@ -70,12 +70,14 @@ public class MainActivity extends AppCompatActivity {
         }.start();
         mTimerRunning = true;
         mStartPauseButton.setText("pause");
+        mResetButton.setVisibility(View.INVISIBLE);
     }
 
     private void pauseTimer(){
         mCountDownTimer.cancel();
         mTimerRunning = false;
         mStartPauseButton.setText("start");
+        mResetButton.setVisibility(View.VISIBLE);
     }
 
     private void resetTimer(){
