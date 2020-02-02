@@ -2,10 +2,12 @@ package com.example.pomodorotimer;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -16,7 +18,9 @@ public class MainActivity extends AppCompatActivity {
 
     private CountDownTimer mCountDownTimer;
 
-    private Button mStartPauseButton;
+    private ImageButton mStartPauseButton;
+    private Drawable mStartIcon;
+    private Drawable mPauseIcon;
     private Button mResetButton;
 
     private TextView mTimerText;
@@ -33,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
         mTimerText = findViewById(R.id.timer);
         mStartPauseButton = findViewById(R.id.start_pause_button);
         mResetButton = findViewById(R.id.reset_button);
+
+        mStartIcon = getDrawable(R.drawable.ic_play_circle_outline_black_40dp);
+        mPauseIcon = getDrawable(R.drawable.ic_pause_circle_outline_black_40dp);
 
         mStartPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,20 +70,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                mStartPauseButton.setText("start");
+                mStartPauseButton.setImageDrawable(mStartIcon);
                 updateTimerText();
                 mTimerRunning = false;
             }
         }.start();
         mTimerRunning = true;
-        mStartPauseButton.setText("pause");
+        mStartPauseButton.setImageDrawable(mPauseIcon);
         mResetButton.setVisibility(View.INVISIBLE);
     }
 
     private void pauseTimer(){
         mCountDownTimer.cancel();
         mTimerRunning = false;
-        mStartPauseButton.setText("start");
+        mStartPauseButton.setImageDrawable(mStartIcon);
         mResetButton.setVisibility(View.VISIBLE);
     }
 
