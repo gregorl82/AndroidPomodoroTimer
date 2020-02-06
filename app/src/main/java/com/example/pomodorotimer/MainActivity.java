@@ -63,6 +63,15 @@ public class MainActivity extends AppCompatActivity {
         mTimerProgressBar.setMax((int)mStartTime);
         mTimerProgressBar.setProgress((int)mTimeRemaining);
 
+        if(savedInstanceState != null){
+            mTimeRemaining = savedInstanceState.getInt("timeRemaining");
+            mTimerProgressBar.setProgress((int)mTimeRemaining);
+            mTimerRunning = savedInstanceState.getBoolean("timerRunning");
+            if(mTimerRunning){
+                mStartPauseButton.setImageDrawable(mPauseIcon);
+                mResetButton.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     private void startTimer() {
@@ -96,5 +105,13 @@ public class MainActivity extends AppCompatActivity {
     private void resetTimer(){
         mTimeRemaining = mStartTime;
         mTimerProgressBar.setProgress((int)mStartTime);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean("timerRunning", mTimerRunning);
+        outState.putLong("timeRemaining", mTimeRemaining);
     }
 }
